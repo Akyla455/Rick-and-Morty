@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:background="@color/grey"
     >
@@ -12,7 +12,7 @@
     <androidx.cardview.widget.CardView
         android:id="@+id/card_character"
         android:layout_width="match_parent"
-        android:layout_height="70dp"
+        android:layout_height="80dp"
         app:cardCornerRadius="7dp"
         android:layout_margin="5dp"
         android:elevation="8dp"
@@ -28,15 +28,19 @@
             >
 
             <ImageView
-                android:id="@+id/imageView2"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                app:srcCompat="@drawable/ic_down_24"
-                tools:layout_editor_absoluteX="16dp"
-                tools:layout_editor_absoluteY="10dp"
-                tools:ignore="MissingConstraints"
-                app:layout_constraintCircleRadius="20dp"
+                android:id="@+id/ic_character"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                app:layout_constraintBottom_toBottomOf="parent"
 
+                app:layout_constraintCircleRadius="20dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_down"
+                tools:ignore="MissingConstraints"
                 />
 
             <TextView
@@ -46,10 +50,10 @@
                 android:layout_marginTop="20dp"
                 android:text="@string/down"
                 android:textColor="@color/black"
-                android:textSize="18sp"
+                android:textSize="20sp"
                 app:layout_constraintEnd_toEndOf="@+id/card_layout"
                 app:layout_constraintHorizontal_bias="0.174"
-                app:layout_constraintStart_toEndOf="@+id/imageView2"
+                app:layout_constraintStart_toEndOf="@+id/ic_character"
                 app:layout_constraintTop_toTopOf="parent">
 
             </TextView>

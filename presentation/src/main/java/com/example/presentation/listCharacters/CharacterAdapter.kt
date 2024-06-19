@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.example.data.model.InfoCharacter
 import com.example.presentation.R
 import com.example.presentation.databinding.ItemCharacterBinding
@@ -22,7 +23,9 @@ class CharacterAdapter(val item: List<InfoCharacter>): RecyclerView.Adapter<Char
         with(holder.binding){
             Glide.with(holder.itemView.context)
                 .load(character.image)
-                .error(R.drawable.ic_down_24)
+                .transform(CircleCrop())
+                .error(R.drawable.ic_down)
+                .into(holder.binding.icCharacter)
             nameCharacter.text = character.name
         }
 

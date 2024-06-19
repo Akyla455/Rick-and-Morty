@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.data.model.InfoCharacter
-import com.example.domain.InfoCharacters
 import com.example.domain.useCases.InfoUseCase
 import kotlinx.coroutines.launch
 
