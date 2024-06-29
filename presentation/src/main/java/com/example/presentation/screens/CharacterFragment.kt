@@ -1,28 +1,31 @@
 package com.example.presentation.screens
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.data.model.InfoCharacter
-import com.example.presentation.R
+import com.example.presentation.ViewModel.CharacterState
+import com.example.presentation.ViewModel.CharacterViewModel
 import com.example.presentation.databinding.FragmentCharacterBinding
-import com.example.presentation.databinding.FragmentMainBinding
 import com.example.presentation.listCharacters.CharacterAdapter
+import com.example.presentation.listCharacters.PaginationScrollListener
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
-class CharacterFragment(
-    private val info: List<InfoCharacter>
-) : Fragment() {
+class CharacterFragment : Fragment() {
+    private val viewModel: CharacterViewModel by viewModel()
     private lateinit var binding: FragmentCharacterBinding
     private lateinit var adapter: CharacterAdapter
+    private lateinit var layoutManager: LinearLayoutManager
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    private var isLoading = false
+    private var isLastPage = false
 
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,11 +37,40 @@ class CharacterFragment(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val layoutManager = LinearLayoutManager(context)
-        adapter = CharacterAdapter(info)
+        layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerView.layoutManager = layoutManager
+        adapter = CharacterAdapter(mutableListOf())
         binding.recyclerView.adapter = adapter
+        binding.recyclerView.addOnScrollListener(object : PaginationScrollListener(layoutManager) {
+            override fun loadMoreItems() {
+                isLoading = true
+                viewModel.loadMoreCharacters()
+            }
 
+            override fun isLastPage(): Boolean = isLastPage
+
+            override fun isLoading(): Boolean = isLoading
+
+        })
+        viewModel.characterState.observe(viewLifecycleOwner, Observer { state ->
+            when (state) {
+                is CharacterState.Loading ->
+                    binding.loadingCroup.visibility = View.VISIBLE
+
+
+                is CharacterState.Loaded -> {
+                    binding.loadingCroup.visibility = View.GONE
+                    binding.recyclerView.visibility = View.VISIBLE
+                    adapter.updateItems(state.info)
+                    isLoading = false
+
+                }
+                is CharacterState.Error -> {
+                    Toast.makeText(context, "Ошибка загрузки", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+        })
     }
 
 //    companion object {
