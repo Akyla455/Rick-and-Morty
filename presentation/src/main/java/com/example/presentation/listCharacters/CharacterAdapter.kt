@@ -32,21 +32,23 @@ class CharacterAdapter(private var items: MutableList<InfoCharacter>): RecyclerV
 
     }
     fun updateItems(newItems: List<InfoCharacter>){
-       val difCallback = object : DiffUtil.Callback(){
-           override fun getOldListSize(): Int  = items.size
+        val oldList = items.toList()
+        items.addAll(newItems)
+        val difCallback = object : DiffUtil.Callback() {
 
-           override fun getNewListSize(): Int = newItems.size
+           override fun getOldListSize(): Int  = oldList.size
+
+           override fun getNewListSize(): Int = items.size
 
            override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-               return items[oldItemPosition].id == newItems[newItemPosition].id
+               return oldList[oldItemPosition].id == items[newItemPosition].id
            }
 
            override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-               return items[oldItemPosition] == newItems[newItemPosition]
+               return oldList[oldItemPosition] == items[newItemPosition]
            }
        }
         val diffResult = DiffUtil.calculateDiff(difCallback)
-        items.addAll(newItems)
         diffResult.dispatchUpdatesTo(this)
     }
 }

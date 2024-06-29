@@ -8,7 +8,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.data.model.InfoCharacter
+import com.example.presentation.R
 import com.example.presentation.ViewModel.CharacterState
 import com.example.presentation.ViewModel.CharacterViewModel
 import com.example.presentation.databinding.FragmentCharacterBinding
@@ -66,7 +66,7 @@ class CharacterFragment : Fragment() {
 
                 }
                 is CharacterState.Error -> {
-                    Toast.makeText(context, "Ошибка загрузки", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, R.string.error, Toast.LENGTH_SHORT).show()
                 }
             }
 
