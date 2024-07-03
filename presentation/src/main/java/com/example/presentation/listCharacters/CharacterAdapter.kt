@@ -9,27 +9,63 @@ import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.example.data.model.InfoCharacter
 import com.example.presentation.R
 import com.example.presentation.databinding.ItemCharacterBinding
+import com.example.presentation.databinding.ItemErrorBinding
 
-class CharacterAdapter(private var items: MutableList<InfoCharacter>): RecyclerView.Adapter<CharacterViewHolder>() {
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CharacterViewHolder {
-        val inflater = LayoutInflater.from(parent.context)
-        val binding = ItemCharacterBinding.inflate(inflater, parent, false)
-        return CharacterViewHolder(binding)
+class CharacterAdapter(
+    private var items: MutableList<InfoCharacter>,
+    private val retryCallback: () -> Unit
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+
+    companion object {
+        const val ITEM_TYPE_CHARACTER = 0
+        const val ITEM_TYPE_ERROR = 1
     }
 
-    override fun getItemCount(): Int = items.size
+    private var showError = false
 
-    override fun onBindViewHolder(holder: CharacterViewHolder, position: Int) {
-        val character = items[position]
-        with(holder.binding){
-            Glide.with(holder.itemView.context)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        val inflater = LayoutInflater.from(parent.context)
+        return when (viewType) {
+            ITEM_TYPE_ERROR -> {
+                val binding = ItemErrorBinding.inflate(inflater, parent, false)
+                ErrorViewHolder(binding)
+            }
+
+            else -> {
+                val binding = ItemCharacterBinding.inflate(inflater, parent, false)
+                CharacterViewHolder(binding)
+            }
+        }
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        return if (showError && position == items.size) ITEM_TYPE_ERROR else ITEM_TYPE_CHARACTER
+    }
+
+    override fun getItemCount(): Int {
+        return if (showError) items.size + 1 else items.size
+    }
+
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        when (holder.itemViewType) {
+            ITEM_TYPE_ERROR -> (holder as ErrorViewHolder).bind(retryCallback)
+            ITEM_TYPE_CHARACTER -> {
+                val character = items[position]
+                with((holder as CharacterViewHolder).binding) {
+                    Glide.with(holder.itemView.context)
                 .load(character.image)
                 .transform(CircleCrop())
-                .error(R.drawable.ic_down)
-                .into(holder.binding.icCharacter)
-            nameCharacter.text = character.name
+                        .error(R.drawable.ic_down)
+                        .into(holder.binding.icCharacter)
+                    nameCharacter.text = character.name
+                }
+            }
         }
+    }
 
+    fun showError(show: Boolean) {
+        showError = show
+        if(show) notifyItemInserted(items.size) else notifyItemRemoved(items.size)
     }
     fun updateItems(newItems: List<InfoCharacter>){
         val oldList = items.toList()

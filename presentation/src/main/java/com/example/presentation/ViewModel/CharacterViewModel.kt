@@ -10,7 +10,7 @@ import kotlinx.coroutines.launch
 
 sealed interface CharacterState{
     data object Loading: CharacterState
-    data object Error: CharacterState
+    data class Error(val message: String): CharacterState
     data class Loaded(val info: List<InfoCharacter>): CharacterState
 }
 
@@ -18,11 +18,6 @@ class CharacterViewModel(
     private val infoUseCase: InfoUseCase
 ): ViewModel() {
     private var currentPage = 1
-    private val pageSize = 19
-
-    private val _isLastPage = MutableLiveData<Boolean>()
-    val isLastPage: LiveData<Boolean>
-        get() = _isLastPage
 
     private val _characterState = MutableLiveData<CharacterState>()
     val characterState: LiveData<CharacterState>
@@ -43,7 +38,7 @@ class CharacterViewModel(
                 val newCharacters = infoUseCase.getInfo(currentPage)
                 _characterState.value = CharacterState.Loaded(newCharacters)
             }catch (e: Exception){
-                _characterState.value = CharacterState.Error
+                _characterState.value = CharacterState.Error(e.message?: "")
             }
         }
     }
