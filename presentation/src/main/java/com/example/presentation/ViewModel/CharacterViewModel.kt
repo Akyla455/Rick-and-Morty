@@ -26,9 +26,15 @@ class CharacterViewModel(
     init {
         getCharacterInfo()
     }
-    fun loadMoreCharacters(){
-        currentPage++
-        getCharacterInfo()
+    fun loadMoreCharacters(isLoading: Boolean){
+        if (!isLoading){
+            getCharacterInfo()
+        } else{
+            currentPage++
+            getCharacterInfo()
+
+        }
+
     }
 
     private fun getCharacterInfo(){

@@ -41,13 +41,13 @@ class CharacterFragment : Fragment() {
         binding.recyclerView.layoutManager = layoutManager
         adapter = CharacterAdapter(mutableListOf(),
             retryCallback = {
-                viewModel.loadMoreCharacters()
+                viewModel.loadMoreCharacters(isLoading)
             } )
         binding.recyclerView.adapter = adapter
         binding.recyclerView.addOnScrollListener(object : PaginationScrollListener(layoutManager) {
             override fun loadMoreItems() {
                 isLoading = true
-                viewModel.loadMoreCharacters()
+                viewModel.loadMoreCharacters(isLoading)
             }
 
             override fun isLastPage(): Boolean = isLastPage
@@ -67,10 +67,10 @@ class CharacterFragment : Fragment() {
                     adapter.updateItems(state.info)
                     adapter.showError(false)
                     isLoading = false
-
                 }
                 is CharacterState.Error -> {
                     binding.loadingCroup.visibility = View.GONE
+                    isLoading = true
                     adapter.showError(true)
                     Toast.makeText(context, R.string.error, Toast.LENGTH_SHORT).show()
                 }
@@ -79,9 +79,9 @@ class CharacterFragment : Fragment() {
         })
     }
 
-//    companion object {
-//
-//        @JvmStatic
-//        fun newInstance() = CharacterFragment()
-//    }
+    companion object {
+
+        @JvmStatic
+        fun newInstance() = CharacterFragment()
+    }
 }
