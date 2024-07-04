@@ -26,15 +26,8 @@ class CharacterViewModel(
     init {
         getCharacterInfo()
     }
-    fun loadMoreCharacters(isLoading: Boolean){
-        if (!isLoading){
-            getCharacterInfo()
-        } else{
-            currentPage++
-            getCharacterInfo()
-
-        }
-
+    fun loadMoreCharacters(){
+        getCharacterInfo()
     }
 
     private fun getCharacterInfo(){
@@ -43,6 +36,7 @@ class CharacterViewModel(
             try {
                 val newCharacters = infoUseCase.getInfo(currentPage)
                 _characterState.value = CharacterState.Loaded(newCharacters)
+                currentPage++
             }catch (e: Exception){
                 _characterState.value = CharacterState.Error(e.message?: "")
             }

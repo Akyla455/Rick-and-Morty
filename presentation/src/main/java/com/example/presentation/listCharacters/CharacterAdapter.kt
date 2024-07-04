@@ -64,8 +64,17 @@ class CharacterAdapter(
     }
 
     fun showError(show: Boolean) {
-        showError = show
-        if(show) notifyItemInserted(items.size) else notifyItemRemoved(items.size)
+        if (show){
+            if (!showError){
+                showError = true
+                notifyItemInserted(items.size)
+            }
+        } else{
+            if (showError){
+                showError = true
+                notifyItemRemoved(items.size)
+            }
+        }
     }
     fun updateItems(newItems: List<InfoCharacter>){
         val oldList = items.toList()

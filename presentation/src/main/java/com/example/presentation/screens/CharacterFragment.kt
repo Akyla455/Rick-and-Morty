@@ -41,13 +41,13 @@ class CharacterFragment : Fragment() {
         binding.recyclerView.layoutManager = layoutManager
         adapter = CharacterAdapter(mutableListOf(),
             retryCallback = {
-                viewModel.loadMoreCharacters(isLoading)
+                viewModel.loadMoreCharacters()
             } )
         binding.recyclerView.adapter = adapter
         binding.recyclerView.addOnScrollListener(object : PaginationScrollListener(layoutManager) {
             override fun loadMoreItems() {
                 isLoading = true
-                viewModel.loadMoreCharacters(isLoading)
+                viewModel.loadMoreCharacters()
             }
 
             override fun isLastPage(): Boolean = isLastPage
