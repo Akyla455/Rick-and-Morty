@@ -40,13 +40,12 @@ class CharacterFragment : Fragment() {
         layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerView.layoutManager = layoutManager
         adapter = CharacterAdapter(mutableListOf(),
-            retryCallback = {
-                viewModel.loadMoreCharacters()
-            } )
+            retryCallback = {retryLoadMoreCharacters()})
         binding.recyclerView.adapter = adapter
         binding.recyclerView.addOnScrollListener(object : PaginationScrollListener(layoutManager) {
             override fun loadMoreItems() {
                 isLoading = true
+                adapter.showLoading(true)
                 viewModel.loadMoreCharacters()
             }
 
@@ -65,18 +64,27 @@ class CharacterFragment : Fragment() {
                     binding.loadingCroup.visibility = View.GONE
                     binding.recyclerView.visibility = View.VISIBLE
                     adapter.updateItems(state.info)
+                    adapter.showLoading(false)
                     adapter.showError(false)
                     isLoading = false
                 }
                 is CharacterState.Error -> {
                     binding.loadingCroup.visibility = View.GONE
                     isLoading = true
+                    adapter.showLoading(false)
                     adapter.showError(true)
                     Toast.makeText(context, R.string.error, Toast.LENGTH_SHORT).show()
                 }
             }
 
         })
+    }
+
+    private fun retryLoadMoreCharacters(){
+        adapter.showError(false)
+        isLoading = true
+        adapter.showLoading(true)
+        viewModel.loadMoreCharacters()
     }
 
     companion object {
