@@ -6,7 +6,6 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
-import com.example.data.model.InfoCharacter
 import com.example.presentation.R
 import com.example.presentation.databinding.ItemCharacterBinding
 import com.example.presentation.databinding.ItemErrorBinding
@@ -22,9 +21,6 @@ class CharacterAdapter(
         const val ITEM_TYPE_ERROR = 1
         const val ITEM_TYPE_LOADING = 2
     }
-
-    private var isLoadingAdded = false
-    private var isErrorAdded = false
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -79,60 +75,28 @@ class CharacterAdapter(
         }
     }
 
-    fun showLoading(show: Boolean) {
-       if (show && !isLoadingAdded){
-           items.add(ItemsType.Loading)
-           notifyItemInserted(items.size - 1)
-           isLoadingAdded = true
-       } else if (!show && isLoadingAdded){
-           val index = items.indexOfFirst { it is ItemsType.Loading }
-           if (index != -1){
-               items.removeAt(index)
-               notifyItemRemoved(index)
-               isLoadingAdded = false
-           }
-       }
-    }
-
-    fun showError(show: Boolean){
-        if (show && !isErrorAdded){
-            items.add(ItemsType.Error)
-            notifyItemInserted(items.size - 1)
-            isErrorAdded = true
-        } else if(!show && isErrorAdded){
-            val index = items.indexOfFirst { it is ItemsType.Error }
-            if (index != -1){
-                items.removeAt(index)
-                notifyItemRemoved(index)
-                isErrorAdded = false
-            }
-        }
-    }
-
-    fun updateItems(newItems: List<InfoCharacter>){
-        val oldList = items.filterIsInstance<ItemsType.Character>().map {it.character}
-        val newList = newItems.map { ItemsType.Character(it) }
-        if (isLoadingAdded){
-            items.removeAt(items.size - 1)
-            isLoadingAdded = false
-        }
-        if (isErrorAdded){
-            items.removeAt(items.size - 1)
-            isErrorAdded = false
-        }
+    fun updateItems(newList: List<ItemsType>) {
+        val oldList = items.toList()
+        items.clear()
         items.addAll(newList)
         val difCallback = object : DiffUtil.Callback() {
 
            override fun getOldListSize(): Int  = oldList.size
 
-           override fun getNewListSize(): Int = newList.size
+            override fun getNewListSize(): Int = newList.size
 
            override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-               return oldList[oldItemPosition].id == newList[newItemPosition].character.id
+               val oldItem = oldList[oldItemPosition]
+               val newItem = newList[newItemPosition]
+               return if(oldItem is ItemsType.Character && newItem is ItemsType.Character){
+                   oldItem.character.id == newItem.character.id
+               } else {
+                   oldItem == newItem
+               }
            }
 
            override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-               return oldList[oldItemPosition] == newList[newItemPosition].character
+               return oldList[oldItemPosition] == newList[newItemPosition]
            }
        }
         val diffResult = DiffUtil.calculateDiff(difCallback)

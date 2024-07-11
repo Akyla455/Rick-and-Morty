@@ -9,8 +9,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.presentation.R
-import com.example.presentation.ViewModel.CharacterState
-import com.example.presentation.ViewModel.CharacterViewModel
+import com.example.presentation.viewModel.CharacterState
+import com.example.presentation.viewModel.CharacterViewModel
 import com.example.presentation.databinding.FragmentCharacterBinding
 import com.example.presentation.listCharacters.CharacterAdapter
 import com.example.presentation.listCharacters.PaginationScrollListener
@@ -45,7 +45,6 @@ class CharacterFragment : Fragment() {
         binding.recyclerView.addOnScrollListener(object : PaginationScrollListener(layoutManager) {
             override fun loadMoreItems() {
                 isLoading = true
-                adapter.showLoading(true)
                 viewModel.loadMoreCharacters()
             }
 
@@ -56,23 +55,21 @@ class CharacterFragment : Fragment() {
         })
         viewModel.characterState.observe(viewLifecycleOwner, Observer { state ->
             when (state) {
-                is CharacterState.Loading ->
-                    binding.loadingCroup.visibility = View.VISIBLE
-
+                is CharacterState.LoadingShimmer -> {
+                    binding.shimmerLayout.visibility = View.VISIBLE
+                    binding.shimmerLayout.startShimmer()
+                }
 
                 is CharacterState.Loaded -> {
-                    binding.loadingCroup.visibility = View.GONE
+                    binding.shimmerLayout.stopShimmer()
+                    binding.shimmerLayout.visibility = View.GONE
                     binding.recyclerView.visibility = View.VISIBLE
                     adapter.updateItems(state.info)
-                    adapter.showLoading(false)
-                    adapter.showError(false)
                     isLoading = false
                 }
                 is CharacterState.Error -> {
-                    binding.loadingCroup.visibility = View.GONE
+                    binding.shimmerLayout.visibility = View.GONE
                     isLoading = true
-                    adapter.showLoading(false)
-                    adapter.showError(true)
                     Toast.makeText(context, R.string.error, Toast.LENGTH_SHORT).show()
                 }
             }
@@ -81,9 +78,7 @@ class CharacterFragment : Fragment() {
     }
 
     private fun retryLoadMoreCharacters(){
-        adapter.showError(false)
         isLoading = true
-        adapter.showLoading(true)
         viewModel.loadMoreCharacters()
     }
 

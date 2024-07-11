@@ -1,17 +1,18 @@
-package com.example.presentation.ViewModel
+package com.example.presentation.viewModel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.data.model.InfoCharacter
 import com.example.domain.useCases.InfoUseCase
+import com.example.presentation.listCharacters.ItemsType
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 sealed interface CharacterState{
-    data object Loading: CharacterState
+    data object LoadingShimmer: CharacterState
     data class Error(val message: String): CharacterState
-    data class Loaded(val info: List<InfoCharacter>): CharacterState
+    data class Loaded(val info: List<ItemsType>): CharacterState
 }
 
 class CharacterViewModel(
@@ -22,7 +23,7 @@ class CharacterViewModel(
     private val _characterState = MutableLiveData<CharacterState>()
     val characterState: LiveData<CharacterState>
         get() = _characterState
-
+    private val characterList: MutableList<ItemsType> = mutableListOf()
     init {
         getCharacterInfo()
     }
@@ -32,13 +33,22 @@ class CharacterViewModel(
 
     private fun getCharacterInfo(){
         viewModelScope.launch {
-            _characterState.value = CharacterState.Loading
+            if(characterList.isEmpty()){
+                _characterState.value = CharacterState.LoadingShimmer
+            } else {
+                _characterState.value = CharacterState.Loaded(characterList + ItemsType.Loading)
+            }
+            delay(3000)
             try {
                 val newCharacters = infoUseCase.getInfo(currentPage)
-                _characterState.value = CharacterState.Loaded(newCharacters)
+                characterList.addAll(newCharacters.map{
+                    ItemsType.Character(it)
+                })
+                _characterState.value = CharacterState.Loaded(characterList)
                 currentPage++
             }catch (e: Exception){
-                _characterState.value = CharacterState.Error(e.message?: "")
+                characterList.removeAll { it is ItemsType.Loading}
+                _characterState.value = CharacterState.Loaded(characterList + ItemsType.Error)
             }
         }
     }

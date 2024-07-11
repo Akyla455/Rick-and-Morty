@@ -6,35 +6,34 @@
     android:layout_height="match_parent"
     tools:context=".screens.CharacterFragment"
     >
-<androidx.constraintlayout.widget.Group
-    android:id="@+id/loading_croup"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    app:constraint_referenced_ids="image_loading, text_loading"
-    android:visibility="gone"
-    />
-    <ImageView
-        android:id="@+id/image_loading"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
-        android:layout_marginStart="170dp"
-        android:layout_marginTop="307dp"
-        android:layout_marginEnd="171dp"
-        android:src="@drawable/ic_down"
-        app:layout_constraintEnd_toEndOf="parent"
+
+    <com.facebook.shimmer.ShimmerFrameLayout
+        android:id="@+id/shimmer_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-    <TextView
-        android:id="@+id/text_loading"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="@+id/image_loading"
-        app:layout_constraintEnd_toEndOf="@+id/image_loading"
-        app:layout_constraintTop_toBottomOf="@+id/image_loading"
-        android:text="@string/loading"
-        android:textColor="@color/black"
-        android:textSize="16sp"
-        />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            >
+            <include layout="@layout/item_shimmer"/>
+            <include layout="@layout/item_shimmer"/>
+            <include layout="@layout/item_shimmer"/>
+            <include layout="@layout/item_shimmer"/>
+            <include layout="@layout/item_shimmer"/>
+            <include layout="@layout/item_shimmer"/>
+            <include layout="@layout/item_shimmer"/>
+            <include layout="@layout/item_shimmer"/>
+            <include layout="@layout/item_shimmer"/>
+        </LinearLayout>
+
+    </com.facebook.shimmer.ShimmerFrameLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"

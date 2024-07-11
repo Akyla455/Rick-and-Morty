@@ -36,24 +36,14 @@ android {
 }
 
 dependencies {
-//    implementation (libs.androidx.recyclerview)
+    implementation(libs.facebook.shimmer)
     implementation (libs.glide)
-//    implementation (libs.androidx.lifecycle.viewmodel.ktx)
-//    implementation (libs.androidx.lifecycle.livedata.ktx)
     implementation(project(":domain"))
     implementation (libs.koin.android)
-//    implementation (libs.koin.androidx.viewmodel)
-//    implementation (libs.koin.android.v350)
     implementation (libs.navigation.fragment.ktx)
     implementation (libs.navigation.ui.ktx)
-
-//    implementation(libs.androidx.core.ktx)
-//    implementation(libs.androidx.appcompat)
     implementation(libs.material)
-//    implementation(libs.androidx.activity)
-//    implementation(libs.androidx.constraintlayout)
     implementation(project(":data"))
     testImplementation(libs.junit)
-//    androidTestImplementation(libs.androidx.junit)
-//    androidTestImplementation(libs.androidx.espresso.core)
+
 }
