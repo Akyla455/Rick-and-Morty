@@ -1,4 +1,4 @@
-package com.example.presentation.viewModel
+package com.example.presentation
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -28,7 +28,9 @@ class CharacterViewModel(
         getCharacterInfo()
     }
     fun loadMoreCharacters(){
-        getCharacterInfo()
+        if (_characterState.value != CharacterState.LoadingShimmer) {
+            getCharacterInfo()
+        }
     }
 
     private fun getCharacterInfo(){

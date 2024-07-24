@@ -9,8 +9,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.presentation.R
-import com.example.presentation.viewModel.CharacterState
-import com.example.presentation.viewModel.CharacterViewModel
+import com.example.presentation.CharacterState
+import com.example.presentation.CharacterViewModel
 import com.example.presentation.databinding.FragmentCharacterBinding
 import com.example.presentation.listCharacters.CharacterAdapter
 import com.example.presentation.listCharacters.PaginationScrollListener
@@ -38,11 +38,11 @@ class CharacterFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         layoutManager = LinearLayoutManager(requireContext())
-        binding.recyclerView.layoutManager = layoutManager
+        binding.recyclerViewCharacter.layoutManager = layoutManager
         adapter = CharacterAdapter(mutableListOf(),
             retryCallback = {retryLoadMoreCharacters()})
-        binding.recyclerView.adapter = adapter
-        binding.recyclerView.addOnScrollListener(object : PaginationScrollListener(layoutManager) {
+        binding.recyclerViewCharacter.adapter = adapter
+        binding.recyclerViewCharacter.addOnScrollListener(object : PaginationScrollListener(layoutManager) {
             override fun loadMoreItems() {
                 isLoading = true
                 viewModel.loadMoreCharacters()
@@ -63,7 +63,7 @@ class CharacterFragment : Fragment() {
                 is CharacterState.Loaded -> {
                     binding.shimmerLayout.stopShimmer()
                     binding.shimmerLayout.visibility = View.GONE
-                    binding.recyclerView.visibility = View.VISIBLE
+                    binding.recyclerViewCharacter.visibility = View.VISIBLE
                     adapter.updateItems(state.info)
                     isLoading = false
                 }

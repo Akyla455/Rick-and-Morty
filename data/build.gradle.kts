@@ -33,13 +33,13 @@ android {
 }
 
 dependencies {
-    implementation("com.squareup.retrofit2:retrofit:2.9.0")
-    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
-
-//    implementation(libs.androidx.core.ktx)
+    implementation(libs.retrofit)
+    implementation(libs.retrofit2.converter.gson)
+    implementation (libs.androidx.room.runtime)
+    implementation (libs.androidx.room.compiler)
+    implementation(libs.androidx.room.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
     testImplementation(libs.junit)
-//    androidTestImplementation(libs.androidx.junit)
-//    androidTestImplementation(libs.androidx.espresso.core)
+
 }
