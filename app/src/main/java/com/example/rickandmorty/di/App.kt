@@ -20,7 +20,7 @@ import com.example.domain.useCases.database.InsertContactUseCase
 import com.example.domain.useCases.database.UpdateContact
 import com.example.domain.useCases.database.UpdateContactUseCase
 import com.example.presentation.CharacterViewModel
-import com.example.presentation.viewModel.ContactViewModel
+import com.example.presentation.ContactViewModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.context.startKoin
@@ -56,15 +56,14 @@ class App: Application() {
                AppDataBase::class.java,
                "contact_database"
            ).build()
-
-            single { get<AppDataBase>().contactDao() }
-            single <LocalContactDataBase> { ContactRepository(get()) }
-            factory <DeleteContactUseCase> { DeleteContact(get()) }
-            factory <GetAllContactUseCase> { GetAllContact(get()) }
-            factory <UpdateContactUseCase> { UpdateContact(get()) }
-            factory <InsertContactUseCase> { InsertContact(get()) }
-            viewModel { ContactViewModel(get(),get(),get(),get()) }
         }
+        single { get<AppDataBase>().contactDao() }
+        single <LocalContactDataBase> { ContactRepository(get()) }
+        single <DeleteContactUseCase> { DeleteContact(get()) }
+        single <GetAllContactUseCase> { GetAllContact(get()) }
+        single <UpdateContactUseCase> { UpdateContact(get()) }
+        single <InsertContactUseCase> { InsertContact(get()) }
+        viewModel { ContactViewModel(get(),get(),get(),get()) }
     }
 }
 

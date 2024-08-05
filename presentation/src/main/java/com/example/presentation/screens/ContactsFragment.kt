@@ -9,8 +9,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.presentation.databinding.FragmentContactsBinding
 import com.example.presentation.listcontacts.ContactsAdapter
-import com.example.presentation.viewModel.ContactState
-import com.example.presentation.viewModel.ContactViewModel
+import com.example.presentation.ContactState
+import com.example.presentation.ContactViewModel
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -36,7 +36,7 @@ class ContactsFragment : Fragment() {
         adapter = ContactsAdapter(mutableListOf())
         binding.recyclerViewContact.adapter = adapter
 
-        lifecycleScope.launch {
+            viewLifecycleOwner.lifecycleScope.launch {
             contactViewModel.state.collect { state ->
                 when (state) {
                     is ContactState.AddContact -> TODO()
@@ -62,7 +62,7 @@ class ContactsFragment : Fragment() {
 
     companion object {
         @JvmStatic
-        fun newInstance() = ContactsFragment
+        fun newInstance() = ContactsFragment()
 
     }
 }

@@ -8,7 +8,7 @@ import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import com.example.data.room.ContactEntity
 import com.example.presentation.databinding.FragmentAddDialogBinding
-import com.example.presentation.viewModel.ContactViewModel
+import com.example.presentation.ContactViewModel
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 class AddDialogFragment : DialogFragment() {

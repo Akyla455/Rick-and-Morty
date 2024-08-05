@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
+    id("com.google.devtools.ksp")
 }
 
 android {
@@ -39,8 +40,11 @@ dependencies {
     implementation(project(":data"))
     implementation(project(":domain"))
     implementation(project(":presentation"))
+    annotationProcessor(libs.androidx.room.compiler)
     implementation (libs.androidx.room.runtime)
-    implementation (libs.androidx.room.compiler)
+//    ksp(libs.androidx.room.compiler)
+
+    //implementation (libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)
     implementation(libs.koin.android)
     implementation(libs.material)
